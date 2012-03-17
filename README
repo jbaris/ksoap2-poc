@@ -9,4 +9,4 @@ cd ksoap2-poc
 mvn clean install
 
 - See:
-/ksoap2-poc/src/test/java/jbaris/wordpress/com/client/ksoap/KSoap2TemplateTest.java
+https://github.com/jbaris/ksoap2-poc/blob/master/src/test/java/jbaris/wordpress/com/client/ksoap/KSoap2TemplateTest.java
