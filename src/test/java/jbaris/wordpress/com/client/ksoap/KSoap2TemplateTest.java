@@ -87,7 +87,7 @@ public class KSoap2TemplateTest extends TestCase {
 		return template;
 	}
 
-	private void noParams_noResult_Call() {
+	private void noParams_noReturn_Call() {
 		getTemplate().call("reset",
 				"http://impl.services.com.wordpress.jbaris/reset");
 	}
@@ -133,7 +133,7 @@ public class KSoap2TemplateTest extends TestCase {
 				});
 	}
 
-	private void objectArrayResult_Call() {
+	private void objectArrayReturn_Call() {
 		final Car[] cars = getTemplate().call("getCarsArray",
 				"http://impl.services.com.wordpress.jbaris/getCarsArray",
 				carArrayResponseMapper);
@@ -187,7 +187,7 @@ public class KSoap2TemplateTest extends TestCase {
 				});
 	}
 
-	private void objectListResut_Call() {
+	private void objectListReturn_Call() {
 		final List<Car> cars = getTemplate().call("getCarsList",
 				"http://impl.services.com.wordpress.jbaris/getCarsList",
 				carListResponseMapper);
@@ -234,7 +234,7 @@ public class KSoap2TemplateTest extends TestCase {
 				});
 	}
 
-	private void objectResult_Call() {
+	private void objectReturn_Call() {
 		primitiveParam_Call();
 	}
 
@@ -254,7 +254,7 @@ public class KSoap2TemplateTest extends TestCase {
 		assertTrue(cars.contains(new Car(3L)));
 	}
 
-	private void primitiveArrayResult_Call() {
+	private void primitiveArrayReturn_Call() {
 		final String[] carNames = getTemplate().call("getCarNamesArray",
 				"http://impl.services.com.wordpress.jbaris/getCarNamesArray",
 				new AbstractResponseMapper<String[]>() {
@@ -285,7 +285,7 @@ public class KSoap2TemplateTest extends TestCase {
 		assertTrue(cars.contains(new Car(3L)));
 	}
 
-	private void primitiveListResult_Call() {
+	private void primitiveListReturn_Call() {
 		final List<String> carNames = getTemplate().call("getCarNamesList",
 				"http://impl.services.com.wordpress.jbaris/getCarNamesList",
 				new AbstractResponseMapper<List<String>>() {
@@ -316,7 +316,7 @@ public class KSoap2TemplateTest extends TestCase {
 		assertEquals("Chevrolet", car.getManufacturer().getName());
 	}
 
-	private void primitiveResult_Call() {
+	private void primitiveReturn_Call() {
 		final String carName = getTemplate().call("getCarName",
 				"http://impl.services.com.wordpress.jbaris/getCarName",
 				new RequestPropertiesSetter() {
@@ -360,7 +360,7 @@ public class KSoap2TemplateTest extends TestCase {
 	}
 
 	public void testCall() {
-		noParams_noResult_Call();
+		noParams_noReturn_Call();
 		// Test params
 		objectParam_Call();
 		objectListParam_Call();
@@ -368,13 +368,13 @@ public class KSoap2TemplateTest extends TestCase {
 		primitiveParam_Call();
 		primitiveListParam_Call();
 		primitiveArrayParam_Call();
-		// Test results
-		objectResult_Call();
-		objectListResut_Call();
-		objectArrayResult_Call();
-		primitiveResult_Call();
-		primitiveListResult_Call();
-		primitiveArrayResult_Call();
+		// Test return values
+		objectReturn_Call();
+		objectListReturn_Call();
+		objectArrayReturn_Call();
+		primitiveReturn_Call();
+		primitiveListReturn_Call();
+		primitiveArrayReturn_Call();
 	}
 
 }
