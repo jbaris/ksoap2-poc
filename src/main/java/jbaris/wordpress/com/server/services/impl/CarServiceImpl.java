@@ -1,6 +1,7 @@
 package jbaris.wordpress.com.server.services.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import jbaris.wordpress.com.common.entities.Car;
@@ -28,7 +29,7 @@ public class CarServiceImpl implements CarService {
 		for (final Car car : cars) {
 			this.cars.add(car);
 		}
-		LOGGER.info("addCarArray = " + cars);
+		LOGGER.info("addCarArray = " + Arrays.deepToString(cars));
 	}
 
 	@Override
@@ -62,7 +63,7 @@ public class CarServiceImpl implements CarService {
 		for (final Car car : cars) {
 			result[i++] = car.getName();
 		}
-		LOGGER.info("getCarNamesArray = " + result);
+		LOGGER.info("getCarNamesArray = " + Arrays.deepToString(result));
 		return result;
 	}
 
@@ -83,7 +84,7 @@ public class CarServiceImpl implements CarService {
 		for (final Car car : cars) {
 			result[i++] = car;
 		}
-		LOGGER.info("getCarsArray = " + result);
+		LOGGER.info("getCarsArray = " + Arrays.deepToString(result));
 		return result;
 	}
 
