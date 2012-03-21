@@ -6,7 +6,7 @@ The tests are based on the ksoap2 template proposed on http://jbaris.wordpress.c
 - How To Run:
 git clone http://github.com/jbaris/ksoap2-poc
 cd ksoap2-poc
-mvn clean install
+mvn clean test
 
 - See:
 http://github.com/jbaris/ksoap2-poc/blob/master/src/test/java/jbaris/wordpress/com/client/ksoap/KSoap2TemplateTest.java
