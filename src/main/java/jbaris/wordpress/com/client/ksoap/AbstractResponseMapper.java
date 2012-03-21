@@ -14,15 +14,44 @@ import org.ksoap2.serialization.SoapObject;
  */
 public abstract class AbstractResponseMapper<T> implements ResponseMapper<T> {
 
+	@SuppressWarnings("unchecked")
+	protected <U> U[] getArray(Collection<Object> collection,
+			ResponseMapper<U> itemMapper, Class<U> resultType) {
+		final U[] result = (U[]) Array.newInstance(resultType,
+				collection.size());
+		final Iterator<Object> iterator = collection.iterator();
+		for (int i = 0; i < result.length; i++) {
+			result[i] = itemMapper.mapResponse(iterator.next());
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected String[] getArray(Object response) {
+		String[] result = new String[0];
+		if (response instanceof Collection) {
+			final Collection<Object> collection = (Collection<Object>) response;
+			result = new String[collection.size()];
+			final Iterator<Object> iterator = collection.iterator();
+			for (int i = 0; i < result.length; i++) {
+				result[i] = iterator.next().toString();
+			}
+		} else if (response != null) {
+			result = new String[1];
+			result[0] = response.toString();
+		}
+		return result;
+	}
+
 	protected char[] getCharArray(Object response) {
 		char[] result = new char[0];
 		if (response instanceof Collection) {
 			@SuppressWarnings("unchecked")
-			Collection<Object> collection = (Collection<Object>) response;
+			final Collection<Object> collection = (Collection<Object>) response;
 			result = new char[collection.size()];
-			Iterator<Object> iterator = collection.iterator();
+			final Iterator<Object> iterator = collection.iterator();
 			for (int i = 0; i < result.length; i++) {
-				String string = iterator.next().toString();
+				final String string = iterator.next().toString();
 				result[i] = Character.valueOf((char) Integer.parseInt(string));
 			}
 		} else if (response != null) {
@@ -34,52 +63,10 @@ public abstract class AbstractResponseMapper<T> implements ResponseMapper<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected String[] getArray(Object response) {
-		String[] result = new String[0];
-		if (response instanceof Collection) {
-			Collection<Object> collection = (Collection<Object>) response;
-			result = new String[collection.size()];
-			Iterator<Object> iterator = collection.iterator();
-			for (int i = 0; i < result.length; i++) {
-				result[i] = iterator.next().toString();
-			}
-		} else if (response != null) {
-			result = new String[1];
-			result[0] = response.toString();
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected <U> U[] getArray(Collection<Object> collection,
-			ResponseMapper<U> itemMapper, Class<U> resultType) {
-		U[] result = (U[]) Array.newInstance(resultType, collection.size());
-		Iterator<Object> iterator = collection.iterator();
-		for (int i = 0; i < result.length; i++) {
-			result[i] = itemMapper.mapResponse(iterator.next());
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	protected <U> List<U> getList(Object response, ResponseMapper<U> itemMapper) {
-		final List<U> result = new ArrayList<U>();
-		if (response instanceof Collection) {
-			Collection<Object> responseCollection = (Collection<Object>) response;
-			for (final Object soapPrimitive : responseCollection) {
-				result.add(itemMapper.mapResponse(soapPrimitive));
-			}
-		} else if (response != null) {
-			result.add(itemMapper.mapResponse(response));
-		}
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
 	protected List<String> getList(Object response) {
 		final List<String> result = new ArrayList<String>();
 		if (response instanceof Collection) {
-			Collection<Object> collection = (Collection<Object>) response;
+			final Collection<Object> collection = (Collection<Object>) response;
 			for (final Object item : collection) {
 				result.add(item.toString());
 			}
@@ -93,12 +80,26 @@ public abstract class AbstractResponseMapper<T> implements ResponseMapper<T> {
 	protected <U> List<U> getList(Object response, Class<U> resultType) {
 		final List<U> result = new ArrayList<U>();
 		if (response instanceof Collection) {
-			Collection<Object> collection = (Collection<Object>) response;
+			final Collection<Object> collection = (Collection<Object>) response;
 			for (final Object item : collection) {
 				result.add(valueOf(resultType, item.toString()));
 			}
 		} else if (response != null) {
 			result.add(valueOf(resultType, response.toString()));
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <U> List<U> getList(Object response, ResponseMapper<U> itemMapper) {
+		final List<U> result = new ArrayList<U>();
+		if (response instanceof Collection) {
+			final Collection<Object> responseCollection = (Collection<Object>) response;
+			for (final Object soapPrimitive : responseCollection) {
+				result.add(itemMapper.mapResponse(soapPrimitive));
+			}
+		} else if (response != null) {
+			result.add(itemMapper.mapResponse(response));
 		}
 		return result;
 	}

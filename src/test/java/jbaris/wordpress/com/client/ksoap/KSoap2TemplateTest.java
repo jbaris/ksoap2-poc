@@ -73,12 +73,13 @@ public class KSoap2TemplateTest extends TestCase {
 			return getList(response, carResponseMapper);
 		}
 	};
-	
+
 	ResponseMapper<Car[]> carArrayResponseMapper = new AbstractResponseMapper<Car[]>() {
 		@SuppressWarnings("unchecked")
 		@Override
 		public Car[] mapResponse(Object response) {
-			return getArray((Collection<Object>) response, carResponseMapper, Car.class);
+			return getArray((Collection<Object>) response, carResponseMapper,
+					Car.class);
 		}
 	};
 
@@ -89,6 +90,60 @@ public class KSoap2TemplateTest extends TestCase {
 	private void noParams_noResult_Call() {
 		getTemplate().call("reset",
 				"http://impl.services.com.wordpress.jbaris/reset");
+	}
+
+	private void objectArrayParam_Call() {
+		getTemplate().call("addCarArray",
+				"http://impl.services.com.wordpress.jbaris/addCarArray",
+				new RequestPropertiesSetter() {
+
+					@Override
+					public void setValues(SoapObject request) {
+						final SoapObject ownerSO = new SoapObject(null,
+								"owners");
+						ownerSO.addProperty("id", 1L);
+						ownerSO.addProperty("name", "John");
+
+						final SoapObject manufacturerSO = new SoapObject(null,
+								"manufacturer");
+						manufacturerSO.addProperty("id", 1L);
+						manufacturerSO.addProperty("name", "Chevrolet");
+						manufacturerSO.addProperty("country", "USA");
+
+						final SoapObject carSO = new SoapObject(null, "cars");
+						carSO.addProperty("id", 4L);
+						carSO.addProperty("name", "Corsa");
+						carSO.addProperty("manufacturer", manufacturerSO);
+						carSO.addSoapObject(ownerSO);
+
+						final SoapObject owner2SO = new SoapObject(null,
+								"owners");
+						owner2SO.addProperty("id", 2L);
+						owner2SO.addProperty("name", "Mary");
+
+						final SoapObject car2SO = new SoapObject(null, "cars");
+						car2SO.addProperty("id", 5L);
+						car2SO.addProperty("name", "Zafira");
+						car2SO.addProperty("manufacturer", manufacturerSO);
+						car2SO.addSoapObject(owner2SO);
+
+						request.addSoapObject(carSO);
+						request.addSoapObject(car2SO);
+					}
+				});
+	}
+
+	private void objectArrayResult_Call() {
+		final Car[] cars = getTemplate().call("getCarsArray",
+				"http://impl.services.com.wordpress.jbaris/getCarsArray",
+				carArrayResponseMapper);
+		assertEquals(5, cars.length);
+		final List<Car> carsList = Arrays.asList(cars);
+		assertTrue(carsList.contains(new Car(1L)));
+		assertTrue(carsList.contains(new Car(2L)));
+		assertTrue(carsList.contains(new Car(3L)));
+		assertTrue(carsList.contains(new Car(4L)));
+		assertTrue(carsList.contains(new Car(5L)));
 	}
 
 	private void objectListParam_Call() {
@@ -183,6 +238,37 @@ public class KSoap2TemplateTest extends TestCase {
 		primitiveParam_Call();
 	}
 
+	private void primitiveArrayParam_Call() {
+		final List<Car> cars = getTemplate().call("getCarsByNames",
+				"http://impl.services.com.wordpress.jbaris/getCarsByNames",
+				new RequestPropertiesSetter() {
+
+					@Override
+					public void setValues(SoapObject request) {
+						request.addProperty("names", "Vectra");
+						request.addProperty("names", "Astra");
+					}
+				}, carListResponseMapper);
+		assertEquals(2, cars.size());
+		assertTrue(cars.contains(new Car(2L)));
+		assertTrue(cars.contains(new Car(3L)));
+	}
+
+	private void primitiveArrayResult_Call() {
+		final String[] carNames = getTemplate().call("getCarNamesArray",
+				"http://impl.services.com.wordpress.jbaris/getCarNamesArray",
+				new AbstractResponseMapper<String[]>() {
+					@Override
+					public String[] mapResponse(Object response) {
+						return getArray(response);
+					}
+				});
+		final List<String> carNamesList = Arrays.asList(carNames);
+		assertTrue(carNamesList.contains("Aveo"));
+		assertTrue(carNamesList.contains("Astra"));
+		assertTrue(carNamesList.contains("Vectra"));
+	}
+
 	private void primitiveListParam_Call() {
 		final List<Car> cars = getTemplate().call("getCarsByIds",
 				"http://impl.services.com.wordpress.jbaris/getCarsByIds",
@@ -203,10 +289,9 @@ public class KSoap2TemplateTest extends TestCase {
 		final List<String> carNames = getTemplate().call("getCarNamesList",
 				"http://impl.services.com.wordpress.jbaris/getCarNamesList",
 				new AbstractResponseMapper<List<String>>() {
-					@SuppressWarnings("unchecked")
 					@Override
 					public List<String> mapResponse(Object response) {
-						return getList((Collection<Object>) response);
+						return getList(response);
 					}
 				});
 		assertTrue(carNames.contains("Aveo"));
@@ -290,92 +375,6 @@ public class KSoap2TemplateTest extends TestCase {
 		primitiveResult_Call();
 		primitiveListResult_Call();
 		primitiveArrayResult_Call();
-	}
-
-	private void primitiveArrayResult_Call() {
-		final String[] carNames = getTemplate().call("getCarNamesArray",
-				"http://impl.services.com.wordpress.jbaris/getCarNamesArray",
-				new AbstractResponseMapper<String[]>() {
-					@SuppressWarnings("unchecked")
-					@Override
-					public String[] mapResponse(Object response) {
-						return getArray((Collection<Object>) response);
-					}
-				});
-		List<String> carNamesList = Arrays.asList(carNames);
-		assertTrue(carNamesList.contains("Aveo"));
-		assertTrue(carNamesList.contains("Astra"));
-		assertTrue(carNamesList.contains("Vectra"));
-	}
-
-	private void objectArrayResult_Call() {
-		final Car[] cars = getTemplate().call("getCarsArray",
-				"http://impl.services.com.wordpress.jbaris/getCarsArray",
-				carArrayResponseMapper);
-		assertEquals(5, cars.length);
-		List<Car> carsList = Arrays.asList(cars);
-		assertTrue(carsList.contains(new Car(1L)));
-		assertTrue(carsList.contains(new Car(2L)));
-		assertTrue(carsList.contains(new Car(3L)));
-		assertTrue(carsList.contains(new Car(4L)));
-		assertTrue(carsList.contains(new Car(5L)));
-	}
-
-	private void primitiveArrayParam_Call() {
-		final List<Car> cars = getTemplate().call("getCarsByNames",
-				"http://impl.services.com.wordpress.jbaris/getCarsByNames",
-				new RequestPropertiesSetter() {
-
-					@Override
-					public void setValues(SoapObject request) {
-						request.addProperty("names", "Vectra");
-						request.addProperty("names", "Astra");
-					}
-				}, carListResponseMapper);
-		assertEquals(2, cars.size());
-		assertTrue(cars.contains(new Car(2L)));
-		assertTrue(cars.contains(new Car(3L)));
-	}
-
-	private void objectArrayParam_Call() {
-		getTemplate().call("addCarArray",
-				"http://impl.services.com.wordpress.jbaris/addCarArray",
-				new RequestPropertiesSetter() {
-
-					@Override
-					public void setValues(SoapObject request) {
-						final SoapObject ownerSO = new SoapObject(null,
-								"owners");
-						ownerSO.addProperty("id", 1L);
-						ownerSO.addProperty("name", "John");
-
-						final SoapObject manufacturerSO = new SoapObject(null,
-								"manufacturer");
-						manufacturerSO.addProperty("id", 1L);
-						manufacturerSO.addProperty("name", "Chevrolet");
-						manufacturerSO.addProperty("country", "USA");
-
-						final SoapObject carSO = new SoapObject(null, "cars");
-						carSO.addProperty("id", 4L);
-						carSO.addProperty("name", "Corsa");
-						carSO.addProperty("manufacturer", manufacturerSO);
-						carSO.addSoapObject(ownerSO);
-
-						final SoapObject owner2SO = new SoapObject(null,
-								"owners");
-						owner2SO.addProperty("id", 2L);
-						owner2SO.addProperty("name", "Mary");
-
-						final SoapObject car2SO = new SoapObject(null, "cars");
-						car2SO.addProperty("id", 5L);
-						car2SO.addProperty("name", "Zafira");
-						car2SO.addProperty("manufacturer", manufacturerSO);
-						car2SO.addSoapObject(owner2SO);
-
-						request.addSoapObject(carSO);
-						request.addSoapObject(car2SO);
-					}
-				});
 	}
 
 }

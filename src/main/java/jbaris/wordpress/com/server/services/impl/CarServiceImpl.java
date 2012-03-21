@@ -25,7 +25,7 @@ public class CarServiceImpl implements CarService {
 
 	@Override
 	public void addCarArray(Car[] cars) {
-		for (Car car : cars) {
+		for (final Car car : cars) {
 			this.cars.add(car);
 		}
 		LOGGER.info("addCarArray = " + cars);
@@ -103,10 +103,10 @@ public class CarServiceImpl implements CarService {
 	@Override
 	public List<Car> getCarsByNames(String[] names) {
 		final List<Car> result = new ArrayList<Car>();
-		for(Car car: cars) {
-			String name = car.getName();
-			for (String string : names) {
-				if(string.equals(name)) {
+		for (final Car car : cars) {
+			final String name = car.getName();
+			for (final String string : names) {
+				if (string.equals(name)) {
 					result.add(car);
 				}
 			}
