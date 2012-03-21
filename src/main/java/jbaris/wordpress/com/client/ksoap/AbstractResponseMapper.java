@@ -1,40 +1,104 @@
 package jbaris.wordpress.com.client.ksoap;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapPrimitive;
 
 /**
  * @author Juan Ignacio Barisich
  */
 public abstract class AbstractResponseMapper<T> implements ResponseMapper<T> {
 
-	protected <U> List<U> getList(Collection<SoapObject> collection,
-			ResponseMapper<U> itemMapper) {
-		final List<U> result = new ArrayList<U>();
-		for (final SoapObject soapPrimitive : collection) {
-			result.add(itemMapper.mapResponse(soapPrimitive));
+	protected char[] getCharArray(Object response) {
+		char[] result = new char[0];
+		if (response instanceof Collection) {
+			@SuppressWarnings("unchecked")
+			Collection<Object> collection = (Collection<Object>) response;
+			result = new char[collection.size()];
+			Iterator<Object> iterator = collection.iterator();
+			for (int i = 0; i < result.length; i++) {
+				String string = iterator.next().toString();
+				result[i] = Character.valueOf((char) Integer.parseInt(string));
+			}
+		} else if (response != null) {
+			result = new char[1];
+			result[0] = Character.valueOf((char) Integer.parseInt(response
+					.toString()));
 		}
 		return result;
 	}
 
-	protected List<String> getList(Collection<SoapPrimitive> collection) {
+	@SuppressWarnings("unchecked")
+	protected String[] getArray(Object response) {
+		String[] result = new String[0];
+		if (response instanceof Collection) {
+			Collection<Object> collection = (Collection<Object>) response;
+			result = new String[collection.size()];
+			Iterator<Object> iterator = collection.iterator();
+			for (int i = 0; i < result.length; i++) {
+				result[i] = iterator.next().toString();
+			}
+		} else if (response != null) {
+			result = new String[1];
+			result[0] = response.toString();
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <U> U[] getArray(Collection<Object> collection,
+			ResponseMapper<U> itemMapper, Class<U> resultType) {
+		U[] result = (U[]) Array.newInstance(resultType, collection.size());
+		Iterator<Object> iterator = collection.iterator();
+		for (int i = 0; i < result.length; i++) {
+			result[i] = itemMapper.mapResponse(iterator.next());
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <U> List<U> getList(Object response, ResponseMapper<U> itemMapper) {
+		final List<U> result = new ArrayList<U>();
+		if (response instanceof Collection) {
+			Collection<Object> responseCollection = (Collection<Object>) response;
+			for (final Object soapPrimitive : responseCollection) {
+				result.add(itemMapper.mapResponse(soapPrimitive));
+			}
+		} else if (response != null) {
+			result.add(itemMapper.mapResponse(response));
+		}
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected List<String> getList(Object response) {
 		final List<String> result = new ArrayList<String>();
-		for (final SoapPrimitive soapPrimitive : collection) {
-			result.add(soapPrimitive.toString());
+		if (response instanceof Collection) {
+			Collection<Object> collection = (Collection<Object>) response;
+			for (final Object item : collection) {
+				result.add(item.toString());
+			}
+		} else if (response != null) {
+			result.add(response.toString());
 		}
 		return result;
 	}
 
-	protected <U> List<U> getList(Collection<SoapPrimitive> collection,
-			Class<U> resultType) {
+	@SuppressWarnings("unchecked")
+	protected <U> List<U> getList(Object response, Class<U> resultType) {
 		final List<U> result = new ArrayList<U>();
-		for (final SoapPrimitive soapPrimitive : collection) {
-			result.add(valueOf(resultType, soapPrimitive.toString()));
+		if (response instanceof Collection) {
+			Collection<Object> collection = (Collection<Object>) response;
+			for (final Object item : collection) {
+				result.add(valueOf(resultType, item.toString()));
+			}
+		} else if (response != null) {
+			result.add(valueOf(resultType, response.toString()));
 		}
 		return result;
 	}
