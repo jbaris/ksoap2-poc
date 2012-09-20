@@ -1,4 +1,4 @@
-package jbaris.wordpress.com.client.ksoap;
+package com.wordpress.jbaris.client.ksoap;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;

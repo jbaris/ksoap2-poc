@@ -1,4 +1,4 @@
-package jbaris.wordpress.com.client.ksoap;
+package com.wordpress.jbaris.client.ksoap;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;

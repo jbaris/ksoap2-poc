@@ -1,4 +1,4 @@
-package jbaris.wordpress.com.common.entities;
+package com.wordpress.jbaris.common.entities;
 
 /**
  * @author Juan Ignacio Barisich

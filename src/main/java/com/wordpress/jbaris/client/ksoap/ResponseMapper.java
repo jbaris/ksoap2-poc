@@ -1,4 +1,4 @@
-package jbaris.wordpress.com.client.ksoap;
+package com.wordpress.jbaris.client.ksoap;
 
 /**
  * @author Juan Ignacio Barisich

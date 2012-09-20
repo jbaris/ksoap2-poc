@@ -1,13 +1,14 @@
-package jbaris.wordpress.com.server.services.impl;
+package com.wordpress.jbaris.server.services.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import jbaris.wordpress.com.common.entities.Car;
-import jbaris.wordpress.com.common.services.CarService;
 
 import org.apache.log4j.Logger;
+
+import com.wordpress.jbaris.common.entities.Car;
+import com.wordpress.jbaris.common.services.CarService;
 
 /**
  * @author Juan Ignacio Barisich

@@ -1,4 +1,4 @@
-package jbaris.wordpress.com.client.ksoap;
+package com.wordpress.jbaris.client.ksoap;
 
 import java.util.Hashtable;
 import java.util.Vector;

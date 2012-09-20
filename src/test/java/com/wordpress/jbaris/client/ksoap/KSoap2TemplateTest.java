@@ -1,18 +1,23 @@
-package jbaris.wordpress.com.client.ksoap;
+package com.wordpress.jbaris.client.ksoap;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import jbaris.wordpress.com.common.entities.Car;
-import jbaris.wordpress.com.common.entities.Manufacturer;
-import jbaris.wordpress.com.common.entities.Owner;
 import junit.framework.TestCase;
 
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.ksoap2.serialization.SoapObject;
+
+import com.wordpress.jbaris.client.ksoap.AbstractResponseMapper;
+import com.wordpress.jbaris.client.ksoap.KSoap2Template;
+import com.wordpress.jbaris.client.ksoap.RequestPropertiesSetter;
+import com.wordpress.jbaris.client.ksoap.ResponseMapper;
+import com.wordpress.jbaris.common.entities.Car;
+import com.wordpress.jbaris.common.entities.Manufacturer;
+import com.wordpress.jbaris.common.entities.Owner;
 
 /**
  * @author Juan Ignacio Barisich

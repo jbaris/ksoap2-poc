@@ -1,11 +1,12 @@
-package jbaris.wordpress.com.common.services;
+package com.wordpress.jbaris.common.services;
 
 import java.util.List;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import jbaris.wordpress.com.common.entities.Car;
+import com.wordpress.jbaris.common.entities.Car;
+
 
 /**
  * @author Juan Ignacio Barisich
