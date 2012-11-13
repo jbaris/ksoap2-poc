@@ -119,8 +119,13 @@ public abstract class AbstractResponseMapper<T> implements ResponseMapper<T> {
 	}
 
 	protected String getProperty(SoapObject soapObject, String key) {
-		return soapObject.getProperty(key).toString();
+		try {
+			return  soapObject.getPropertySafelyAsString(key).toString();
+		} catch (Exception e) {
+			return null;
+		}
 	}
+
 
 	protected <U> U getProperty(SoapObject soapObject, String key,
 			Class<U> resultType) {
